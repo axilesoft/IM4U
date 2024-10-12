@@ -709,13 +709,15 @@ bool UVmdFactory::ImportMorphCurveToAnimSequence(
 		return false;
 	}
 	/* morph animation regist*/
+	if (vmdMotionInfo == nullptr || vmdMotionInfo->keyFaceList.Num() == 0) return false;
+
 	for (int i = 0; i < vmdMotionInfo->keyFaceList.Num(); ++i)
 	{
 		MMD4UE4::VmdFaceTrackList * vmdFaceTrackPtr = &vmdMotionInfo->keyFaceList[i];
 		/********************************************/
 		//original
 		FName Name = *vmdFaceTrackPtr->TrackName;
-
+		if (Skeleton == nullptr) return false;
 #if 0	/* under ~UE4.10*/
 		FSmartNameMapping* NameMapping 
 			//= Skeleton->SmartNames.GetContainer(USkeleton::AnimCurveMappingName); 
@@ -724,6 +726,7 @@ bool UVmdFactory::ImportMorphCurveToAnimSequence(
 			//= const_cast<FSmartNameMapping*>(Skeleton->GetSmartNameContainer(USkeleton::AnimCurveMappingName));//UE4.11~
 			= Skeleton->GetSmartNameContainer(USkeleton::AnimCurveMappingName);//UE4.11~
 #endif
+		if (NameMapping == nullptr) return false;
 		/**********************************/
 		//self
 		if (mesh != NULL)
